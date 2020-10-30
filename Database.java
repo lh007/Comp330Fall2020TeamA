@@ -5,8 +5,6 @@
  * reads in file
 
  */
-
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,6 +14,7 @@ public class Database {
     String familyFile = "FamilyTreeInputTextFile.csv";
     String[] personArray;
     String[] relationshipsArray;
+
     HashMap<String, Person> db = new HashMap<>();
 
     public Database() throws Exception {
@@ -33,8 +32,10 @@ public class Database {
         String fileName = this.familyFile;
         String data = readFileAsString(fileName);
         String[] informationArray = data.split("\n"); // array of strings called informationArray is split by new line
+
         for (int i = 0; i <= informationArray.length-1; i++) {
             String currentLine = informationArray[i];
+
             if (currentLine.startsWith("P")) {
                 Person currentPerson = this.makePerson(currentLine);
                 db.put(currentPerson.getPersonNum(), currentPerson);
@@ -50,9 +51,10 @@ public class Database {
                 String marriageDate = relationshipsArray[3];
                 String divorceDate = relationshipsArray[4];
                 String marriageLocation = relationshipsArray[5];
-                //createMarriage(relationshipNum, wife, husband, marriageDate, divorceDate, marriageLocation);
+                createMarriage(relationshipNum, wife, husband, marriageDate, divorceDate, marriageLocation);
 
             }
+
         }
 
     }
@@ -67,23 +69,23 @@ public class Database {
         String birthCity = personArray[5];
         String deathDate = personArray[6];
         String deathCity = personArray[7];
-        //String parentRelationship = personArray[8];
-        Person result = new Person(personNum, lastName, firstName, nameSuffix, birthday, birthCity, deathDate, deathCity);
+        String parentRelationship = personArray[8];
+        Person result = new Person(personNum, lastName, firstName, nameSuffix, birthday, birthCity, deathDate, deathCity, parentRelationship);
         return result;
     }
 
 //creates marriage relationship using index 1 and 2 of relationship array respectively
-//    public void createMarriage(String relationshipNum, String wife, String husband, String marriageDate, String divorceDate, String marriageLocation) {
-//        Person female = db.get(wife);
-//        Person male = db.get(husband);
-//        //female.setSpouses(male);
-//        for (Person p: db.values()){
-//            if (p.getParentRelationship().equals(relationshipNum)){
-//                p.setParents(female, male);
-//            }
-//        }
-//
-//    }
+    public void createMarriage(String relationshipNum, String wife, String husband, String marriageDate, String divorceDate, String marriageLocation) {
+        Person female = db.get(wife);
+        Person male = db.get(husband);
+        //female.setSpouses(male);
+        for (Person p: db.values()){
+            if (p.getParentRelationship().equals(relationshipNum)){
+                p.setParents(female, male);
+            }
+        }
+
+    }
 
     public void createSiblings(){
         for (Person p1: db.values()){

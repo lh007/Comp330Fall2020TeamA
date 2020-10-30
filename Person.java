@@ -19,7 +19,7 @@ public class Person {
     private String birthCity;
     private String deathDate;
     private String deathCity;
-    //private String parentRelationship;
+    private String parentRelationship;
     private String partner;
     private ArrayList parents;
     private ArrayList siblings;
@@ -28,7 +28,7 @@ public class Person {
 
 
     public Person(String personNum, String lastName, String firstName, String nameSuffix, String birthday,
-                  String birthCity, String deathDate, String deathCity) { //, String relationship)
+                  String birthCity, String deathDate, String deathCity, String relationship){
         this.personNum = personNum;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -37,7 +37,7 @@ public class Person {
         this.birthCity = birthCity;
         this.deathDate = deathDate;
         this.deathCity = deathCity;
-        //this.parentRelationship = relationship;
+        this.parentRelationship = relationship;
         parents = new ArrayList<Person>();
         siblings = new ArrayList<Person>();
         children = new ArrayList<Person>();
@@ -49,16 +49,16 @@ public class Person {
     }
     public void setParents(Person p1, Person p2) {
         parents.add(Arrays.asList(p1, p2));
-        //p1.children.add(child);
-        //p2.children.add(child);
+       // p1.children.add(this);
+       // p2.children.add(this);
 
     }
-//    public void setSpouses(Person partner2){
-//        if (this.getSpouse().equals("") && partner2.equals("")){
-//            this.partner = partner2.getFirstName();
-//            partner2.partner = this.getFirstName();
-//        }
-//    }
+    public void setSpouses(Person partner2){
+        if (this.getSpouse().equals("") && partner2.equals("")){
+            this.partner = partner2.getFirstName();
+            partner2.partner = this.getFirstName();
+        }
+    }
 
     public void setSiblings(Person sibling2){
         this.siblings.add(sibling2);
@@ -130,9 +130,9 @@ public class Person {
         this.deathCity = deathCity;
     }
 
-//    public String getParentRelationship() {
-//        return parentRelationship;
-//    }
+    public String getParentRelationship() {
+        return parentRelationship;
+    }
     public String getSpouse(){
         return partner;
     }
