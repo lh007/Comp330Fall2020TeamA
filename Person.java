@@ -66,6 +66,12 @@ public class Person {
 
     }
 
+    public String toString(){
+        return firstName + "  " + lastName;
+    }
+
+// person itself and track if child of someone
+
     public String getPersonNum(){
         return personNum;
     }
@@ -133,9 +139,11 @@ public class Person {
     public String getParentRelationship() {
         return parentRelationship;
     }
+
     public String getSpouse(){
         return partner;
     }
+
     public ArrayList<Person> getChildren() {
         return children;
     }

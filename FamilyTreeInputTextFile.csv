@@ -21,7 +21,7 @@ P30,Smith,Christine Betty, ,5/5/1979,Evanston, , , N/A
 P31,Smith,Henry,II,8/23/1980,Evanston, , , N/A
 P26,Johnsom,Dick,IV,3/5/2001,Flint, , , N/A
 P27,Smith,John J, ,12/4/2003,Flint, , , N/A
-,,,,,,,,
+,,,,,,,,N/A
 Partnership,10, , , , , , ,
 R1,P7,P6,6/7/1938, ,St Matthew's Flint Michigan, , ,
 R2,P10,P8,7/13/1919,6/4/1930,JP Lansing Michigan, , ,
