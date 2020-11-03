@@ -9,15 +9,65 @@
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Database {
     String familyFile = "FamilyTreeInputTextFile.csv";
-
     HashMap<String, Person> persons = new HashMap<>();
     HashMap<String, Relationship> relationships = new HashMap<>();
 
+    Scanner scanner = new Scanner(System.in);
+
+
     public Database() throws Exception {
         this.readFile();
+        this.menu();
+        //this.searchMember();
+
+    }
+    public void menu(){
+        System.out.println("What would you like to do? Search or add member or find relationships");
+        String answer = scanner.nextLine().toUpperCase();
+
+        if (answer.contains("SEARCH")) {
+            searchMember();
+        }
+        if (answer.contains("ADD")) {
+            addMember();
+        }
+        if (answer.contains("RELATIONSHIP")){
+            System.out.println("Would you like to search for parents or children of a specific person?");
+            answer = scanner.nextLine().toUpperCase();
+            if (answer.contains("PARENT")) {
+                System.out.print("You've searched for parents!");
+                }
+            if (answer.contains("CHILDREN")) {
+                System.out.print("You've searched for children!");
+
+                }
+            }
+        }
+
+
+    public void searchMember(){
+        System.out.println("Enter in Person ID: ");
+        String searchIDNum = scanner.nextLine().toUpperCase();
+        if (persons.containsKey(searchIDNum)){
+            System.out.println(persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() +  " " + persons.get(searchIDNum).getNameSuffix());
+            System.out.println("Born: " + persons.get(searchIDNum).getBirthday() + " in " + persons.get(searchIDNum).getBirthCity());
+            if (persons.get(searchIDNum).getDeathDate().equals(" ")) {
+                System.out.println(persons.get(searchIDNum).getFirstName() + " has not died yet!");
+            }
+            else{
+                System.out.println("Died: " + persons.get(searchIDNum).getDeathDate() + " in " + persons.get(searchIDNum).getDeathCity());
+            }
+
+        }
+
+    }
+
+
+    public void addMember(){
 
     }
 
@@ -43,8 +93,8 @@ public class Database {
             }
             Person currentPerson = this.makePerson(currentLine);
             persons.put(currentPerson.getPersonNum(), currentPerson);
-            System.out.println("Person " + currentPerson.getFirstName() + " was created");
-            System.out.println(currentPerson.getFirstName() + " was born in " + currentPerson.getBirthCity() + " on " + currentPerson.getBirthday());
+            //System.out.println("Person " + currentPerson.getFirstName() + " was created");
+           //System.out.println(currentPerson.getFirstName() + " was born in " + currentPerson.getBirthCity() + " on " + currentPerson.getBirthday());
 
 
         }
@@ -60,8 +110,8 @@ public class Database {
             Relationship currentRelationship = this.makeRelationship(currentLine);
             //createMarriage(relationshipNum, wife, husband, marriageDate, divorceDate, marriageLocation);
             relationships.put(currentRelationship.getRelationshipNum(), currentRelationship);
-            System.out.println(currentLine);
-            System.out.println(currentRelationship.getRelationshipNum() + " has " + currentRelationship.getWife() + " and " + currentRelationship.getHusband() + " on " + currentRelationship.getMarriageDate());
+            //System.out.println(currentLine);
+            //System.out.println("Marriage " + currentRelationship.getRelationshipNum() + " was created between: " + currentRelationship.getWife() + " and " + currentRelationship.getHusband() + " on " + currentRelationship.getMarriageDate());
 
         }
         i++;
@@ -71,10 +121,11 @@ public class Database {
             String parentsRelationshipNum = childrenArray[0];
             String childNum = childrenArray[1];
             relationships.get(parentsRelationshipNum).getChildren().add(persons.get(childNum));
-            System.out.println(parentsRelationshipNum + " has " + relationships.get(parentsRelationshipNum).getChildren());
+            //System.out.println(parentsRelationshipNum + " has " + relationships.get(parentsRelationshipNum).getChildren());
         }
 
     }
+
 
     private Person makePerson(String data) {
         String[] personArray = data.split(",");
