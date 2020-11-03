@@ -1,3 +1,10 @@
+/*
+  Relationshipi class
+
+  @author tarala
+ * @version 1
+ * attributes, getters and setters
+ */
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +37,7 @@ public class Relationship {
 
         //look up relationship by relationship num and add children
 
+    // getters and setters: TODO delete unnecessary and reflect in other documents
     public String getRelationshipNum() {
         return relationshipNum;
     }

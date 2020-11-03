@@ -2,10 +2,9 @@
   Person class
 
   @author tarala
- * @version 2
- * attributes, getters and setters, create relationships (parents,sibling,marriage)
+ * @version 3
+ * attributes, getters and setters, tracks if is child of someone?)
  */
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,8 +21,7 @@ public class Person {
     private String parentRelationship;
     private String partner;
     private ArrayList parents;
-    private ArrayList siblings;
-    private ArrayList children;
+
 
 
 
@@ -39,20 +37,9 @@ public class Person {
         this.deathCity = deathCity;
         this.parentRelationship = relationship;
         parents = new ArrayList<Person>();
-        siblings = new ArrayList<Person>();
-        children = new ArrayList<Person>();
 
     }
 
-    public String relationship(){
-        return "";
-    }
-    public void setParents(Person p1, Person p2) {
-        parents.add(Arrays.asList(p1, p2));
-       // p1.children.add(this);
-       // p2.children.add(this);
-
-    }
     public void setSpouses(Person partner2){
         if (this.getSpouse().equals("") && partner2.equals("")){
             this.partner = partner2.getFirstName();
@@ -60,18 +47,14 @@ public class Person {
         }
     }
 
-    public void setSiblings(Person sibling2){
-        this.siblings.add(sibling2);
-        sibling2.siblings.add(this);
 
-    }
-
+    //overrides hashcode reference
     public String toString(){
-        return firstName + "  " + lastName;
+        return firstName + " " + lastName + " " + nameSuffix;
     }
 
-// person itself and track if child of someone
 
+// getters and setters - TODO delete unnecessary and reflect in other documents
     public String getPersonNum(){
         return personNum;
     }
@@ -144,15 +127,9 @@ public class Person {
         return partner;
     }
 
-    public ArrayList<Person> getChildren() {
-        return children;
-    }
-
     public ArrayList<Person> getParents() {
         return parents;
     }
 
-    public ArrayList<Person> getSiblings() {
-        return siblings;
-    }
+
 }

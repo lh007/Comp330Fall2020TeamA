@@ -36,39 +36,96 @@ public class Database {
             addMember();
         }
         if (answer.contains("RELATIONSHIP")){
-            System.out.println("Would you like to search for parents or children of a specific person?");
+            System.out.println("Would you like to search for parents, children, or siblings of a specific person?");
             answer = scanner.nextLine().toUpperCase();
             if (answer.contains("PARENT")) {
-                System.out.print("You've searched for parents!");
+                System.out.println("You've searched for parents!");
+                searchParents();
                 }
             if (answer.contains("CHILDREN")) {
-                System.out.print("You've searched for children!");
-
+                System.out.println("You've searched for children!");
+                searchChildren();
+                }
+            if (answer.contains("SIBLINGS")) {
+                searchSiblings();
                 }
             }
         }
 
-
-    public void searchMember(){
-        System.out.println("Enter in Person ID: ");
+    public void searchMember(){ //completed
+        System.out.println("Enter Person ID: ");
         String searchIDNum = scanner.nextLine().toUpperCase();
         if (persons.containsKey(searchIDNum)){
-            System.out.println(persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() +  " " + persons.get(searchIDNum).getNameSuffix());
-            System.out.println("Born: " + persons.get(searchIDNum).getBirthday() + " in " + persons.get(searchIDNum).getBirthCity());
+            System.out.println(persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() +  " " + persons.get(searchIDNum).getNameSuffix() + " was found. Birth and death information listed below:");
+            if (persons.get(searchIDNum).getBirthday().equals(" ")) {
+                System.out.println(persons.get(searchIDNum).getFirstName() + "'s birthday or is not listed");
+            }
+            else{
+                System.out.println("Born: " + persons.get(searchIDNum).getBirthday() + " in " + persons.get(searchIDNum).getBirthCity());
+            }
             if (persons.get(searchIDNum).getDeathDate().equals(" ")) {
-                System.out.println(persons.get(searchIDNum).getFirstName() + " has not died yet!");
+                System.out.println(persons.get(searchIDNum).getFirstName() + " 's death day is not listed");
             }
             else{
                 System.out.println("Died: " + persons.get(searchIDNum).getDeathDate() + " in " + persons.get(searchIDNum).getDeathCity());
             }
-
         }
+    }
+// test cases for searchParents():
+// p1 (Parents of Dick Johnson are: Sarah Susan  Smith and Dick  Johnson)
+// p15 (no parents found)
+// p17 (Parents of Sally Abigale Smith are: Henry Adam Smith and there is no mother found)
 
+    public void searchParents() { // not working for one or more values are not found
+        System.out.println("Enter Person ID: ");
+        String searchIDNum = scanner.nextLine().toUpperCase();
+        if (persons.containsKey(searchIDNum)) {
+            String parentRelationshipNum = persons.get(searchIDNum).getParentRelationship();
+            if (relationships.get(parentRelationshipNum).getWife().equals(null) && relationships.get(parentRelationshipNum).getHusband().equals(null)) {
+                System.out.println("No parents found");
+            }
+            // TODO fix cases in which one spouse value is not found
+            else if (relationships.get(parentRelationshipNum).getWife().equals(" ")) {
+                System.out.println("Parents of " + persons.get(searchIDNum).getFirstName() + " are: " + relationships.get(parentRelationshipNum).getHusband() + " and there is no mother found");
+            } else if (relationships.get(parentRelationshipNum).getHusband().equals(" ")) {
+                System.out.println("Parents of " + persons.get(searchIDNum).getFirstName() + " are: " + relationships.get(parentRelationshipNum).getWife() + " and there is no father found");
+            } else {
+                System.out.println("Parents of " + persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() + " are: " + relationships.get(parentRelationshipNum).getWife() + " and " + relationships.get(parentRelationshipNum).getHusband());
+            }
+        }
     }
 
+    // test cases: p1 (Dick Johnson Jr has childrens: Jane Sarah Johnson, Sally Abigale Johnson BVM)
+    public void searchChildren(){
+        System.out.println("Enter Person ID: ");
+        String searchIDNum = scanner.nextLine().toUpperCase();
 
+
+    }
+// logic is messed up here
+    public void searchSiblings(){
+        System.out.println("Enter Person ID: ");
+        String searchIDNum = scanner.nextLine().toUpperCase();
+        if (persons.containsKey(searchIDNum)) {
+            String parentRelationshipNum = persons.get(searchIDNum).getParentRelationship();
+            if (parentRelationshipNum.equals(" ")) {
+                System.out.println(relationships.get(parentRelationshipNum).getWife() + " " + relationships.get(parentRelationshipNum).getHusband() + " have no children listed");
+            } else {
+                System.out.println(persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() + " " + persons.get(searchIDNum).getNameSuffix() + " has childrens whom are siblings:");
+                for (Person i : relationships.get(parentRelationshipNum).getChildren()) {
+                    System.out.println(i);
+
+                }
+            }
+        }
+    }
     public void addMember(){
-
+        System.out.println("Add Person attributes separated by commas. If no attribute exists, add a space and comma anyways.");
+        System.out.println("The order is as follows: person ID Num, last name, first name, suffix, birthday, birth city, death day, death city, parent ID Num");
+        String data = scanner.nextLine();
+        Person newPerson = makePerson(data);
+        System.out.println(newPerson.getFirstName() + newPerson.getLastName() + " has been created!");
+        //TODO create marriage (if necessary), set relationship with parent, and add child to parent's children arraylist
     }
 
     public String readFileAsString(String fileName) throws Exception {
@@ -114,18 +171,20 @@ public class Database {
             //System.out.println("Marriage " + currentRelationship.getRelationshipNum() + " was created between: " + currentRelationship.getWife() + " and " + currentRelationship.getHusband() + " on " + currentRelationship.getMarriageDate());
 
         }
-        i++;
+        i++; //skips children line
         for (; i <= informationArray.length - 1; i++) {
             String currentLine = informationArray[i];
             String[] childrenArray = currentLine.split(",");
             String parentsRelationshipNum = childrenArray[0];
             String childNum = childrenArray[1];
             relationships.get(parentsRelationshipNum).getChildren().add(persons.get(childNum));
-            //System.out.println(parentsRelationshipNum + " has " + relationships.get(parentsRelationshipNum).getChildren());
+
+            //System.out.println(parentsRelationshipNum + ": " + relationships.get(parentsRelationshipNum).getWife() + relationships.get(parentsRelationshipNum).getHusband() + " has " + relationships.get(parentsRelationshipNum).getChildren());
         }
 
     }
 
+// assign attributes from text file to specific person and relationship
 
     private Person makePerson(String data) {
         String[] personArray = data.split(",");
@@ -157,28 +216,7 @@ public class Database {
     }
 
 
-    //creates marriage relationship using index 1 and 2 of relationship array respectively
-    public void createMarriage(String relationshipNum, String wife, String husband, String marriageDate, String divorceDate, String marriageLocation) {
-        Person female = persons.get(wife);
-        Person male = persons.get(husband);
-        //female.setSpouses(male);
-        for (Person p : persons.values()) {
-            if (p.getParentRelationship().equals(relationshipNum)) {
-                p.setParents(female, male);
-            }
-        }
 
-    }
-
-    public void createSiblings() {
-        for (Person p1 : persons.values()) {
-            for (Person p2 : persons.values()) {
-                if (p1.getParents().equals(p2.getParents())) {
-                    p1.setSiblings(p2);
-                }
-            }
-        }
-    }
 }
 
 
