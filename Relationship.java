@@ -34,7 +34,9 @@ public class Relationship {
             children = new ArrayList<>();
 
         }
+    public String toString() {return relationshipNum + ": " +  wife + " and " + husband + "\n";
 
+    }
         //look up relationship by relationship num and add children
 
     // getters and setters: TODO delete unnecessary and reflect in other documents

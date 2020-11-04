@@ -40,14 +40,6 @@ public class Person {
 
     }
 
-    public void setSpouses(Person partner2){
-        if (this.getSpouse().equals("") && partner2.equals("")){
-            this.partner = partner2.getFirstName();
-            partner2.partner = this.getFirstName();
-        }
-    }
-
-
     //overrides hashcode reference
     public String toString(){
         return firstName + " " + lastName + " " + nameSuffix;
@@ -122,11 +114,6 @@ public class Person {
     public String getParentRelationship() {
         return parentRelationship;
     }
-
-    public String getSpouse(){
-        return partner;
-    }
-
     public ArrayList<Person> getParents() {
         return parents;
     }

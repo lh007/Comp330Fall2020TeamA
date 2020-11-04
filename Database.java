@@ -22,55 +22,72 @@ public class Database {
     public Database() throws Exception {
         this.readFile();
         this.menu();
-        //this.searchMember();
 
     }
-    public void menu(){
+
+    public void menu() {
         System.out.println("What would you like to do? Search or add member or find relationships");
         String answer = scanner.nextLine().toUpperCase();
 
         if (answer.contains("SEARCH")) {
             searchMember();
         }
-        if (answer.contains("ADD")) {
+        else if (answer.contains("ADD")) {
             addMember();
         }
-        if (answer.contains("RELATIONSHIP")){
+        else if (answer.contains("RELATIONSHIP")) {
             System.out.println("Would you like to search for parents, children, or siblings of a specific person?");
             answer = scanner.nextLine().toUpperCase();
             if (answer.contains("PARENT")) {
                 System.out.println("You've searched for parents!");
                 searchParents();
-                }
-            if (answer.contains("CHILDREN")) {
+            }
+            else if (answer.contains("CHILD")) {
                 System.out.println("You've searched for children!");
                 searchChildren();
-                }
-            if (answer.contains("SIBLINGS")) {
+            }
+            else if (answer.contains("SIBLING")) {
                 searchSiblings();
+            }
+        }
+        else {
+            System.out.println("Sorry, action is not recognized! Please enter in a valid option.");
+            menu();
+        }
+    }
+
+
+    public void searchMember() {
+        System.out.println("Enter person's full name. Include a double space if suffix is not found.");
+        String searchName = scanner.nextLine();
+        for (Person i : persons.values()) {
+            if (i.toString().equals(searchName)) {
+                System.out.println(i.getFirstName() + " " + i.getLastName() + " " + i.getNameSuffix() + " was found. Birth and death information listed below:");
+                if (i.getBirthday().equals(" ")) {
+                    System.out.println(i.getFirstName() + "'s birthday or is not listed");
+                } else {
+                    System.out.println("Born: " + i.getBirthday() + " in " + i.getBirthCity());
                 }
+                if (i.getDeathDate().equals(" ")) {
+                    System.out.println(i.getFirstName() + " 's death day is not listed");
+                } else {
+                    System.out.println("Died: " + i.getDeathDate() + " in " + i.getDeathCity());
+                }
+            }
+//            if (!i.toString().equals(searchName)) {
+//                System.out.println(searchName + " is not found in the family tree. Would you like to add this person? Reply Yes or No. ");
+//                searchName = scanner.nextLine();
+//                if (searchName.equals("Yes")){
+//                    addMember();
+//                }
+//                else {
+//                    menu();
+//                }
+//            }
             }
         }
 
-    public void searchMember(){ //completed
-        System.out.println("Enter Person ID: ");
-        String searchIDNum = scanner.nextLine().toUpperCase();
-        if (persons.containsKey(searchIDNum)){
-            System.out.println(persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() +  " " + persons.get(searchIDNum).getNameSuffix() + " was found. Birth and death information listed below:");
-            if (persons.get(searchIDNum).getBirthday().equals(" ")) {
-                System.out.println(persons.get(searchIDNum).getFirstName() + "'s birthday or is not listed");
-            }
-            else{
-                System.out.println("Born: " + persons.get(searchIDNum).getBirthday() + " in " + persons.get(searchIDNum).getBirthCity());
-            }
-            if (persons.get(searchIDNum).getDeathDate().equals(" ")) {
-                System.out.println(persons.get(searchIDNum).getFirstName() + " 's death day is not listed");
-            }
-            else{
-                System.out.println("Died: " + persons.get(searchIDNum).getDeathDate() + " in " + persons.get(searchIDNum).getDeathCity());
-            }
-        }
-    }
+
 // test cases for searchParents():
 // p1 (Parents of Dick Johnson are: Sarah Susan  Smith and Dick  Johnson)
 // p15 (no parents found)
@@ -82,7 +99,7 @@ public class Database {
         if (persons.containsKey(searchIDNum)) {
             String parentRelationshipNum = persons.get(searchIDNum).getParentRelationship();
             if (relationships.get(parentRelationshipNum).getWife().equals(null) && relationships.get(parentRelationshipNum).getHusband().equals(null)) {
-                System.out.println("No parents found");
+                System.out.println("No parents listed");
             }
             // TODO fix cases in which one spouse value is not found
             else if (relationships.get(parentRelationshipNum).getWife().equals(" ")) {
@@ -95,28 +112,55 @@ public class Database {
         }
     }
 
-    // test cases: p1 (Dick Johnson Jr has childrens: Jane Sarah Johnson, Sally Abigale Johnson BVM)
+    // test cases: r9 (Relationship R9 has childrens listed below: Dick Johnsom IV John J Smith)
+    // r10 (Relationship R10 is not listed. Please enter a valid Relationship ID.)
+    //
     public void searchChildren(){
-        System.out.println("Enter Person ID: ");
+        System.out.println("Enter Relationship ID: ");
         String searchIDNum = scanner.nextLine().toUpperCase();
-
+        if (relationships.containsKey(searchIDNum)) {
+            System.out.println("Relationship " + searchIDNum + " has childrens listed below: ");
+            for (Person i : relationships.get(searchIDNum).getChildren()) {
+                System.out.println(i);
+            }
+        System.out.println("Would you like to search for another list of children?");
+            if (searchIDNum.equals("YES")){
+                searchChildren();
+            }
+            else {
+                menu();
+            }
+        }
+        else if (!relationships.containsKey(searchIDNum)){
+           System.out.println("Relationship " + searchIDNum + " is not listed. Please enter a valid Relationship ID." );
+           searchChildren();
+        }
+        else if (relationships.get(searchIDNum).getChildren().isEmpty()) {
+            System.out.println("No children listed");
+        }
 
     }
-// logic is messed up here
-    public void searchSiblings(){
+// test cases: p1 (The siblings of Dick Johnson Jr are listed below: Jane Sarah Johnson Sally Abigale Johnson BVM)
+    public void searchSiblings() {
         System.out.println("Enter Person ID: ");
         String searchIDNum = scanner.nextLine().toUpperCase();
         if (persons.containsKey(searchIDNum)) {
             String parentRelationshipNum = persons.get(searchIDNum).getParentRelationship();
-            if (parentRelationshipNum.equals(" ")) {
-                System.out.println(relationships.get(parentRelationshipNum).getWife() + " " + relationships.get(parentRelationshipNum).getHusband() + " have no children listed");
-            } else {
-                System.out.println(persons.get(searchIDNum).getFirstName() + " " + persons.get(searchIDNum).getLastName() + " " + persons.get(searchIDNum).getNameSuffix() + " has childrens whom are siblings:");
-                for (Person i : relationships.get(parentRelationshipNum).getChildren()) {
-                    System.out.println(i);
-
-                }
+            System.out.println("The siblings of " + persons.get(searchIDNum).toString() + " are listed below:");
+            if (relationships.get(parentRelationshipNum).getChildren().size() == 1){
+                System.out.println("There are no siblings found");
             }
+            for (Person i : relationships.get(parentRelationshipNum).getChildren())
+                if (i.toString().equals(persons.get(searchIDNum).toString())) {
+                    continue;
+                }
+                else {
+                    System.out.println(i);
+                }
+        }
+        else {
+            System.out.println("Person was not found. Please enter a valid ID key.");
+            searchSiblings();
         }
     }
     public void addMember(){
@@ -125,7 +169,7 @@ public class Database {
         String data = scanner.nextLine();
         Person newPerson = makePerson(data);
         System.out.println(newPerson.getFirstName() + newPerson.getLastName() + " has been created!");
-        //TODO create marriage (if necessary), set relationship with parent, and add child to parent's children arraylist
+        //TODO create marriage (if necessary), set relationship with parent, and add child to parent's children arraylist, making changes to text file and save
     }
 
     public String readFileAsString(String fileName) throws Exception {
@@ -150,6 +194,7 @@ public class Database {
             }
             Person currentPerson = this.makePerson(currentLine);
             persons.put(currentPerson.getPersonNum(), currentPerson);
+            //System.out.println(persons.values());
             //System.out.println("Person " + currentPerson.getFirstName() + " was created");
            //System.out.println(currentPerson.getFirstName() + " was born in " + currentPerson.getBirthCity() + " on " + currentPerson.getBirthday());
 
@@ -165,8 +210,8 @@ public class Database {
                 break;
             }
             Relationship currentRelationship = this.makeRelationship(currentLine);
-            //createMarriage(relationshipNum, wife, husband, marriageDate, divorceDate, marriageLocation);
             relationships.put(currentRelationship.getRelationshipNum(), currentRelationship);
+            //System.out.println(relationships.values());
             //System.out.println(currentLine);
             //System.out.println("Marriage " + currentRelationship.getRelationshipNum() + " was created between: " + currentRelationship.getWife() + " and " + currentRelationship.getHusband() + " on " + currentRelationship.getMarriageDate());
 
@@ -178,7 +223,9 @@ public class Database {
             String parentsRelationshipNum = childrenArray[0];
             String childNum = childrenArray[1];
             relationships.get(parentsRelationshipNum).getChildren().add(persons.get(childNum));
-
+            persons.get(childNum).getParents().add(relationships.get(parentsRelationshipNum).getWife());
+            persons.get(childNum).getParents().add(relationships.get(parentsRelationshipNum).getHusband());
+            //System.out.println(persons.get(childNum).getParents());
             //System.out.println(parentsRelationshipNum + ": " + relationships.get(parentsRelationshipNum).getWife() + relationships.get(parentsRelationshipNum).getHusband() + " has " + relationships.get(parentsRelationshipNum).getChildren());
         }
 
@@ -214,8 +261,6 @@ public class Database {
         Relationship result = new Relationship(relationshipNum, wife, husband, marriageDate, divorceDate, marriageLocation);
         return result;
     }
-
-
 
 }
 
