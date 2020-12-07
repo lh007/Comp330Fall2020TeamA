@@ -13,14 +13,14 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Database {
+    Scanner scanner = new Scanner(System.in);
     String familyFile = "FamilyTreeInputTextFile.csv";
     HashMap<String, Person> persons = new HashMap<>();
     HashMap<String, Relationship> relationships = new HashMap<>();
 
-    Scanner scanner = new Scanner(System.in);
-
 
     public Database() throws Exception {
+        System.out.println("Welcome to our Genealogy Program. Follow the instructions below to begin");
         this.readFile();
         this.menu();
     }
@@ -199,6 +199,7 @@ public class Database {
                 System.out.println(i);
             }
         System.out.println("Would you like to search for another list of children?");
+            searchIDNum = scanner.nextLine().toUpperCase();
             if (searchIDNum.equals("YES")){
                 findChildren();
             }
@@ -213,7 +214,7 @@ public class Database {
         else if (relationships.get(searchIDNum).getChildren().isEmpty()) {
             System.out.println("No children listed");
         }
-
+        menu();
     }
 // test cases: p1 (The siblings of Dick Johnson Jr are listed below: Jane Sarah Johnson Sally Abigale Johnson BVM)
     // p13 (The siblings of Betty Jane Smith   are listed below: There are no siblings found)
@@ -246,7 +247,7 @@ public class Database {
         String data = scanner.nextLine();
         Person newPerson = makePerson(data);
         persons.put(newPerson.getPersonNum(), newPerson);
-        System.out.println(newPerson.getFirstName() + " " + newPerson.getLastName() + " has been created!");
+        System.out.println(newPerson.getFirstName() + " " + newPerson.getLastName() +" has been created with the following information! \n" + newPerson.getBirthday() + " in " + newPerson.getBirthCity() + "\n" +  newPerson.getDeathDate() + "in " + newPerson.getDeathCity());
 
         System.out.println("Is this person married? Enter yes or no.");
         data = scanner.nextLine().toUpperCase();
